@@ -1,0 +1,28 @@
+# Environment & Secrets
+.env
+.env.local
+.env.production
+
+# PHP Error Logs
+error_log
+*.log
+
+# Uploaded Files (user content - store on cloud, not in repo)
+resumes/
+img/posts/
+img/ads/
+img/20*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Composer
+vendor/
+composer.lock
+
+# Node (if any frontend tooling added later)
+node_modules/

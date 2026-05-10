@@ -1,0 +1,38 @@
+RewriteEngine On 
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+RewriteRule ^home/?$ index.php [L,NC]
+RewriteRule ^delete/?$ delete.php [L,NC]
+RewriteRule ^status/?$ status.php [L,NC]
+
+RewriteRule ^add-post/?$ add-post.php [L,NC]
+RewriteRule ^edit-post/?$ edit-post.php [L,NC]
+RewriteRule ^edit-admin/?$ edit-admin.php [L,NC]
+
+RewriteRule ^edit-team/?$ edit-team.php [L,NC]
+RewriteRule ^edit-service/?$ edit-service.php [L,NC]
+RewriteRule ^edit-product/?$ edit-product.php [L,NC]
+
+RewriteRule ^add-job/?$ add-job.php [L,NC]
+RewriteRule ^edit-job/?$ edit-job.php [L,NC]
+RewriteRule ^posts/?$ posts.php [L,NC]
+RewriteRule ^post/?$ post.php [L,NC]
+RewriteRule ^logos/?$ logos.php [L,NC]
+RewriteRule ^applications/?$ applications.php [L,NC]
+RewriteRule ^products/?$ products.php [L,NC]
+
+RewriteRule ^services/?$ services.php [L,NC]
+RewriteRule ^category-posts/?$ category-posts.php [L,NC]
+RewriteRule ^edit-category/?$ edit-category.php [L,NC]
+
+RewriteRule ^settings/?$ settings.php [L,NC]
+RewriteRule ^team/?$ team.php [L,NC]
+
+RewriteRule ^add-admin/?$ add-admin.php [L,NC]
+
+RewriteRule ^enquiries/?$ enquiries.php [L,NC]
+RewriteRule ^login/?$ login.php
+
+RewriteRule ^logout/?$ logout.php

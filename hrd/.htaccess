@@ -1,0 +1,31 @@
+RewriteEngine On 
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+RewriteRule ^home/?$ index.php [L,NC]
+
+RewriteRule ^login/?$ login.php [L,NC]
+RewriteRule ^register/?$ register.php [L,NC]
+
+RewriteRule ^verify-email/?$ verify-email.php
+RewriteRule ^team/?$ team.php
+RewriteRule ^logout/?$ logout.php
+
+RewriteRule ^products/?$ products.php
+RewriteRule ^career/?$ career.php
+RewriteRule ^privacy-policy/?$ privacy-policy.php
+
+RewriteRule ^about/?$ about.php
+RewriteRule ^contact/?$ contact.php
+RewriteRule ^services/?$ services.php
+RewriteRule ^blogs/?$ blogs.php
+RewriteRule ^blog/([^/]+)/?$ blog.php?slug=$1 [L,QSA,NC]
+RewriteRule ^service/([^/]+)/?$ service.php?slug=$1 [L,QSA,NC]
+
+RewriteRule ^apply/([^/]+)/?$ apply.php?job=$1 [L,QSA,NC]
+
+RewriteRule ^forget-password/?$ forget-password.php
+RewriteRule ^change-password/?$ change-password.php [L,NC]
+RewriteRule ^register/([^/]+)/?$ ref-register.php?userid=$1 [L,QSA,NC]
+ErrorDocument 404 /404.php
