@@ -1,6 +1,7 @@
 # ============================================================
 # FirstMeta Website — Dockerfile
 # PHP 8.2 + Apache, with PostgreSQL (pgsql) PDO extension
+# Optimized for Railway deployment
 # ============================================================
 FROM php:8.2-apache
 
@@ -19,8 +20,8 @@ RUN docker-php-ext-install \
     pgsql \
     zip
 
-# Enable Apache mod_rewrite (required for .htaccess URL rewriting)
-RUN a2enmod rewrite
+# Enable required Apache modules
+RUN a2enmod rewrite headers
 
 # Configure Apache to allow .htaccess overrides
 RUN echo '<Directory /var/www/html>\n\
@@ -29,6 +30,14 @@ RUN echo '<Directory /var/www/html>\n\
     Require all granted\n\
 </Directory>' > /etc/apache2/conf-available/docker-php.conf \
     && a2enconf docker-php
+
+# Railway uses dynamic PORT — configure Apache to listen on $PORT
+# Default to 80 if PORT is not set (local development)
+RUN sed -i 's/Listen 80/Listen ${PORT}/' /etc/apache2/ports.conf \
+    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/' /etc/apache2/sites-available/000-default.conf
+
+# Set the default PORT for local development
+ENV PORT=80
 
 # Set working directory
 WORKDIR /var/www/html
@@ -45,8 +54,8 @@ RUN mkdir -p /var/www/html/img/posts \
     && chmod -R 775 /var/www/html/img \
     && chmod -R 775 /var/www/html/resumes
 
-# Expose port 80
-EXPOSE 80
+# Expose the dynamic port
+EXPOSE ${PORT}
 
 # Start Apache
 CMD ["apache2-foreground"]
