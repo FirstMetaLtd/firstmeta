@@ -20,8 +20,9 @@ RUN docker-php-ext-install \
     pgsql \
     zip
 
-# Enable required Apache modules
-RUN a2enmod rewrite headers
+# Enable required Apache modules and fix MPM conflicts
+RUN a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork rewrite headers
 
 # Configure Apache to allow .htaccess overrides
 RUN echo '<Directory /var/www/html>\n\
