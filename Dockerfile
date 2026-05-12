@@ -31,19 +31,15 @@ RUN echo '<Directory /var/www/html>\n\
 </Directory>' > /etc/apache2/conf-available/docker-php.conf \
     && a2enconf docker-php
 
-# Railway uses dynamic PORT — configure Apache to listen on $PORT
-# Default to 80 if PORT is not set (local development)
-RUN sed -i 's/Listen 80/Listen ${PORT}/' /etc/apache2/ports.conf \
-    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/' /etc/apache2/sites-available/000-default.conf
-
-# Set the default PORT for local development
-ENV PORT=80
-
 # Set working directory
 WORKDIR /var/www/html
 
 # Copy application files
 COPY . .
+
+# Fix Windows line endings and make entrypoint executable
+RUN sed -i 's/\r$//' /var/www/html/docker-entrypoint.sh \
+    && chmod +x /var/www/html/docker-entrypoint.sh
 
 # Fix permissions for uploaded files directories
 RUN mkdir -p /var/www/html/img/posts \
@@ -54,8 +50,5 @@ RUN mkdir -p /var/www/html/img/posts \
     && chmod -R 775 /var/www/html/img \
     && chmod -R 775 /var/www/html/resumes
 
-# Expose the dynamic port
-EXPOSE ${PORT}
-
-# Start Apache
-CMD ["apache2-foreground"]
+# Use entrypoint script to configure PORT at runtime
+ENTRYPOINT ["/var/www/html/docker-entrypoint.sh"]
