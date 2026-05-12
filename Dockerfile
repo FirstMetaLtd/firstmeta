@@ -49,5 +49,5 @@ RUN mkdir -p /var/www/html/img/posts \
 # Expose port 80 (Railway will route to this if PORT=80 is set)
 EXPOSE 80
 
-# Force disable conflicting MPM modules at runtime before starting Apache
-CMD a2dismod mpm_event mpm_worker > /dev/null 2>&1 || true; apache2-foreground
+# Force disable conflicting MPM modules and dump environment variables to .env for PHP
+CMD a2dismod mpm_event mpm_worker > /dev/null 2>&1 || true; env > /var/www/html/.env; apache2-foreground
