@@ -1,8 +1,8 @@
 RewriteEngine On
 
-# Force HTTPS redirect
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+# Force HTTPS redirect (Disabled for Railway deployment since Railway handles SSL termination and forces HTTPS)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 # Serve existing files and directories directly
 RewriteCond %{REQUEST_FILENAME} -d [OR]
