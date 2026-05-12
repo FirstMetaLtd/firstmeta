@@ -20,9 +20,8 @@ RUN docker-php-ext-install \
     pgsql \
     zip
 
-# Enable required Apache modules and fix MPM conflicts
-RUN a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork rewrite headers
+# Enable required Apache modules
+RUN a2enmod rewrite headers
 
 # Configure Apache to allow .htaccess overrides
 RUN echo '<Directory /var/www/html>\n\
@@ -38,10 +37,6 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# Fix Windows line endings and make entrypoint executable
-RUN sed -i 's/\r$//' /var/www/html/docker-entrypoint.sh \
-    && chmod +x /var/www/html/docker-entrypoint.sh
-
 # Fix permissions for uploaded files directories
 RUN mkdir -p /var/www/html/img/posts \
              /var/www/html/img/ads \
@@ -51,5 +46,5 @@ RUN mkdir -p /var/www/html/img/posts \
     && chmod -R 775 /var/www/html/img \
     && chmod -R 775 /var/www/html/resumes
 
-# Use entrypoint script to configure PORT at runtime
-ENTRYPOINT ["/var/www/html/docker-entrypoint.sh"]
+# Expose port 80 (Railway will route to this if PORT=80 is set)
+EXPOSE 80
