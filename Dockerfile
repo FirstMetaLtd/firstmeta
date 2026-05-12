@@ -23,13 +23,13 @@ RUN docker-php-ext-install \
 # Enable required Apache modules
 RUN a2enmod rewrite headers
 
-# Configure Apache to allow .htaccess overrides
+# Configure Apache to allow .htaccess overrides without breaking PHP
 RUN echo '<Directory /var/www/html>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' > /etc/apache2/conf-available/docker-php.conf \
-    && a2enconf docker-php
+</Directory>' > /etc/apache2/conf-available/custom-apache.conf \
+    && a2enconf custom-apache
 
 # Set working directory
 WORKDIR /var/www/html
