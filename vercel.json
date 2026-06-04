@@ -1,0 +1,50 @@
+{
+  "functions": {
+    "api/**/*.php": {
+      "runtime": "vercel-php@0.6.0"
+    },
+    "*.php": {
+      "runtime": "vercel-php@0.6.0"
+    },
+    "admin/**/*.php": {
+      "runtime": "vercel-php@0.6.0"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://pagead2.googlesyndication.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co; frame-ancestors 'self';" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/home/?", "destination": "/index.php" },
+    { "source": "/login/?", "destination": "/login.php" },
+    { "source": "/register/?", "destination": "/register.php" },
+    { "source": "/verify-email/?", "destination": "/verify-email.php" },
+    { "source": "/team/?", "destination": "/team.php" },
+    { "source": "/logout/?", "destination": "/logout.php" },
+    { "source": "/products/?", "destination": "/products.php" },
+    { "source": "/career/?", "destination": "/career.php" },
+    { "source": "/privacy-policy/?", "destination": "/privacy-policy.php" },
+    { "source": "/product/(?<slug>[^/]+)/?", "destination": "/product.php?slug=$slug" },
+    { "source": "/about/?", "destination": "/about.php" },
+    { "source": "/contact/?", "destination": "/contact.php" },
+    { "source": "/services/?", "destination": "/services.php" },
+    { "source": "/blogs/?", "destination": "/blogs.php" },
+    { "source": "/blog/(?<slug>[^/]+)/?", "destination": "/blog.php?slug=$slug" },
+    { "source": "/service/(?<slug>[^/]+)/?", "destination": "/service.php?slug=$slug" },
+    { "source": "/apply/(?<job>[^/]+)/?", "destination": "/apply.php?job=$job" },
+    { "source": "/forget-password/?", "destination": "/forget-password.php" },
+    { "source": "/change-password/?", "destination": "/change-password.php" },
+    { "source": "/register/(?<userid>[^/]+)/?", "destination": "/ref-register.php?userid=$userid" },
+    { "source": "/private/(.*)", "destination": "/404.php" },
+    { "source": "/admin/private/(.*)", "destination": "/404.php" }
+  ]
+}
