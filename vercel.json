@@ -1,7 +1,15 @@
 {
   "builds": [
-    { "src": "*.php", "use": "vercel-php@0.9.0" },
-    { "src": "admin/**/*.php", "use": "vercel-php@0.9.0" }
+    { 
+      "src": "*.php", 
+      "use": "vercel-php@0.9.0",
+      "config": { "includeFiles": ["private/**", "admin/private/**"] }
+    },
+    { 
+      "src": "admin/**/*.php", 
+      "use": "vercel-php@0.9.0",
+      "config": { "includeFiles": ["private/**", "admin/private/**"] }
+    }
   ],
   "headers": [
     {
