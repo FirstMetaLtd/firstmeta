@@ -1,6 +1,7 @@
 {
   "env": {
-    "APP_DEBUG": "true"
+    "APP_DEBUG": "true",
+    "DB_PORT": "6543"
   },
   "builds": [
     { 

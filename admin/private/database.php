@@ -25,7 +25,7 @@ if (file_exists($envFile)) {
 
 // Database configuration from environment
 $db_host = $_ENV['DB_HOST']     ?? getenv('DB_HOST')     ?? 'db.yehpaaosvnrywobxwozd.supabase.co';
-$db_port = $_ENV['DB_PORT']     ?? getenv('DB_PORT')     ?? '5432';
+$db_port = $_ENV['DB_PORT']     ?? getenv('DB_PORT')     ?? '6543'; // 6543 = Supabase PgBouncer (required for Vercel serverless)
 $db_name = $_ENV['DB_NAME']     ?? getenv('DB_NAME')     ?? 'postgres';
 $db_user = $_ENV['DB_USER']     ?? getenv('DB_USER')     ?? 'postgres';
 $db_pass = $_ENV['DB_PASS']     ?? getenv('DB_PASS')     ?? '';
