@@ -1,4 +1,4 @@
-<?php require 'private/autoload.php';
+<?php require __DIR__ . '/autoload.php';
 $sqlforservices = 'SELECT * from services';
 $statement = $con->prepare($sqlforservices);
 $statement->execute();
