@@ -41,18 +41,32 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
     extract($_POST);
 
     $filename = $_FILES['image']['name'];
+    $upload_error = $_FILES['image']['error'];
 
-    if($filename!=''){
+    if($upload_error !== UPLOAD_ERR_OK && $upload_error !== UPLOAD_ERR_NO_FILE){
+      $error=3;
+      $msg = in_array($upload_error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
+          ? 'Image is too large. Please upload a smaller file.'
+          : 'Image upload failed. Please try again.';
+      echo "<script>swal('Error!', '$msg', 'error').then(function() {
+          window.location = 'team';
+      })</script>";
+    }elseif($filename!=''){
     $file_size = $_FILES["image"]["size"];
     $filesize=$file_size/1024;
     $allowed = array('gif', 'png', 'jpg','webp','jpeg');
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    
+
       if (in_array($ext, $allowed)) {
           $file_type = 'is_image';
           $filedate= date('Ymd')."teammember".date('His');
                 $insertfile = "img/".$filedate.".".$ext ;
-                move_uploaded_file($_FILES["image"]["tmp_name"], '../'.$insertfile);
+                if(!move_uploaded_file($_FILES["image"]["tmp_name"], '../'.$insertfile)){
+                    $error=4;
+                    echo "<script>swal('Error!', 'Failed to save the uploaded image. Please try again.', 'error').then(function() {
+                      window.location = 'team';
+                  })</script>";
+                }
       }else{
         $error=3;
         echo "<script>swal('Error!', 'Failed to post.File must be an image', 'error').then(function() {
@@ -76,7 +90,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
             $arr['id']=$_GET['id'];
             $arr['exp']=$exp;
            
-                  $addcity = "UPDATE `team` SET `name`=:name,`designation`=:designation,`image`=:image,`exp`=:exp WHERE id=:id";
+                  $addcity = "UPDATE team SET name=:name,designation=:designation,image=:image,exp=:exp WHERE id=:id";
                   $stm = $con->prepare($addcity);
                   if($stm->execute($arr)){
                       echo "<script>

@@ -37,32 +37,46 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
     $filename = $_FILES["image"]["name"];
     $file_size = $_FILES["image"]["size"];
 
+    if($_FILES["image"]["error"] !== UPLOAD_ERR_OK){
+        $msg = in_array($_FILES["image"]["error"], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
+            ? 'Image is too large. Please upload a smaller file.'
+            : 'Image upload failed. Please try again.';
+        echo "<script>swal('Error!', '$msg', 'error').then(function() {
+                            window.history.back();
+                        })</script>";
+    }else{
+
     $filesize=$file_size/1024;
     if($filesize<500){
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-    
-   
+
+
         if($error == ''){
 
 
             $tempname = $_FILES['image']['tmp_name'];
             $insertfile = "img/".date('Ymd')."teammember".date('His').".".$ext ;
-            move_uploaded_file($tempname,"../".$insertfile);
+            if(move_uploaded_file($tempname,"../".$insertfile)){
 
-        
+
             $arr['designation']=$designation;
             $arr['name']=$name;
             $arr['qualification']='';
             $arr['exp']=$exp;
             $arr['image']=$insertfile;
-           
+
                   $addcity = "insert into team (name,designation,image,exp,qualification) values(:name,:designation,:image,:exp,:qualification)";
                   $stm = $con->prepare($addcity);
                   if($stm->execute($arr)){
                       echo "<script>
                                   window.location = 'team';</script>";
                   }
+            }else{
+                echo "<script>swal('Error!', 'Failed to save the uploaded image. Please try again.', 'error').then(function() {
+                            window.history.back();
+                        })</script>";
+            }
         }
 
       }else{
@@ -70,6 +84,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                             window.history.back();
                         })</script>";
       }
+    }
 
 
 }

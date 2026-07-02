@@ -32,7 +32,16 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
   extract($_POST);
 
 $filename = $_FILES['logo']['name'];
-if($filename!=''){
+$upload_error = $_FILES['logo']['error'];
+if($upload_error !== UPLOAD_ERR_OK && $upload_error !== UPLOAD_ERR_NO_FILE){
+  $error=3;
+  $msg = in_array($upload_error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
+      ? 'Logo is too large. Please upload a smaller file.'
+      : 'Logo upload failed. Please try again.';
+  echo "<script>swal('Error!', '$msg', 'error').then(function() {
+    window.location = 'settings';
+})</script>";
+}elseif($filename!=''){
 $file_size = $_FILES["logo"]["size"];
 $filesize=$file_size/1024;
 $allowed = array('gif', 'png', 'jpg','webp','jpeg');
@@ -42,11 +51,16 @@ if (in_array($ext, $allowed)) {
     $file_type = 'is_image';
     $filedate= date('Ymd')."logo".date('His');
           $insertfile = "img/".$filedate.".".$ext ;
-          move_uploaded_file($_FILES["logo"]["tmp_name"], '../'.$insertfile);
+          if(!move_uploaded_file($_FILES["logo"]["tmp_name"], '../'.$insertfile)){
+              $error=4;
+              echo "<script>swal('Error!', 'Failed to save the uploaded logo. Please try again.', 'error').then(function() {
+                window.location = 'settings';
+            })</script>";
+          }
 }else{
   $error=3;
   echo "<script>swal('Error!', 'Failed to post. File must be an image', 'error').then(function() {
-    window.location = 'add-post';
+    window.location = 'settings';
 })</script>";
 }
 }else{
@@ -65,7 +79,7 @@ if (in_array($ext, $allowed)) {
             $arr['twitter_url']=$twitter_url;
             $arr['linkedin_url']=$linkedin_url;
             
-            $update = "UPDATE `general_settings` SET `logo`=:logo,`site_title`=:site_title,`email`=:email,`phone`=:phone,`facebook_url`=:facebook_url,`instagram_url`=:instagram_url,`twitter_url`=:twitter_url,`linkedin_url`=:linkedin_url WHERE id=1";
+            $update = "UPDATE general_settings SET logo=:logo,site_title=:site_title,email=:email,phone=:phone,facebook_url=:facebook_url,instagram_url=:instagram_url,twitter_url=:twitter_url,linkedin_url=:linkedin_url WHERE id=1";
             $stm = $con->prepare($update);
             if($stm->execute($arr)){
                       echo "<script>swal('Success!', 'Settings updated successfully.', 'success').then(function() {

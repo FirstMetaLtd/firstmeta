@@ -24,7 +24,7 @@ if(count($posts)>0){
 	$stmview->execute(['ip_add'=>$ip_add,'post_id'=>$p->post_id]);
 	$views=$stmview->fetchAll(PDO::FETCH_OBJ);
 	if(count($views)<1){
-		$addviews = "INSERT INTO `views`(`ip_add`, `post_id`) VALUES (:ip_add,:post_id)";
+		$addviews = "INSERT INTO views(ip_add, post_id) VALUES (:ip_add,:post_id)";
         $stm = $con->prepare($addviews);
         $stm->execute(['ip_add'=>$ip_add,'post_id'=>$p->post_id]);
 

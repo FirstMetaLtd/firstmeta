@@ -40,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
             $arr['name']=esc($name);
             $arr['slug']=$slug;
             
-            $addpackages = "INSERT INTO `category`(`name`, `slug`) VALUES (:name,:slug)";
+            $addpackages = "INSERT INTO category(name, slug) VALUES (:name,:slug)";
             $stm = $con->prepare($addpackages);
             if($stm->execute($arr)){
                       echo "<script>swal('Success!', 'Category Added successfully.', 'success').then(function() {
