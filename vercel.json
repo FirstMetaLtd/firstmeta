@@ -4,16 +4,23 @@
     "DB_PORT": "6543"
   },
   "builds": [
-    { 
-      "src": "*.php", 
+    {
+      "src": "*.php",
       "use": "vercel-php@0.9.0",
       "config": { "includeFiles": ["private/**", "admin/private/**"] }
     },
-    { 
-      "src": "admin/**/*.php", 
+    {
+      "src": "admin/**/*.php",
       "use": "vercel-php@0.9.0",
       "config": { "includeFiles": ["private/**", "admin/private/**"] }
-    }
+    },
+    { "src": "assets/**", "use": "@vercel/static" },
+    { "src": "img/**", "use": "@vercel/static" },
+    { "src": "admin/dist/**", "use": "@vercel/static" },
+    { "src": "admin/icons/**", "use": "@vercel/static" },
+    { "src": "admin/plugins/**", "use": "@vercel/static" },
+    { "src": "sitemap.xml", "use": "@vercel/static" },
+    { "src": "robot.txt", "use": "@vercel/static" }
   ],
   "headers": [
     {
