@@ -137,7 +137,6 @@ function upload_to_supabase_storage($tmpFilePath, $destPath, $mimeType){
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
-    curl_close($ch);
 
     if($httpCode >= 200 && $httpCode < 300){
         return rtrim($supabaseUrl, '/')."/storage/v1/object/public/{$bucket}/{$destPath}";
