@@ -60,8 +60,9 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
 if (in_array($ext, $allowed)) {
     $file_type = 'is_image';
     $filedate= date('Ymd')."icon".date('His');
-          $insertfile = "img/".$filedate.".".$ext ;
-          if(!move_uploaded_file($_FILES["icon"]["tmp_name"], '../'.$insertfile)){
+          $destpath = "job/".$filedate.".".$ext ;
+          $insertfile = upload_to_supabase_storage($_FILES["icon"]["tmp_name"], $destpath, mime_content_type($_FILES["icon"]["tmp_name"]) ?: 'application/octet-stream');
+          if(!$insertfile){
               $error=4;
               echo "<script>swal('Error!', 'Failed to save the uploaded icon. Please try again.', 'error').then(function() {
                 window.location = 'add-job';
@@ -146,7 +147,7 @@ if (in_array($ext, $allowed)) {
                  
                     <label  class="col-sm-2 col-form-label" >Icon</label>
                     <div class="col-sm-10">
-                      <img src="<?=$baseurl.$p->icon;?>" width="200px">
+                      <img src="<?=image_url($p->icon);?>" width="200px">
                       <input type="file" class="form-control" name="icon">
                     </div>
                   </div>

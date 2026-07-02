@@ -60,8 +60,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
       if (in_array($ext, $allowed)) {
           $file_type = 'is_image';
           $filedate= date('Ymd')."teammember".date('His');
-                $insertfile = "img/".$filedate.".".$ext ;
-                if(!move_uploaded_file($_FILES["image"]["tmp_name"], '../'.$insertfile)){
+                $destpath = "team/".$filedate.".".$ext ;
+                $insertfile = upload_to_supabase_storage($_FILES["image"]["tmp_name"], $destpath, mime_content_type($_FILES["image"]["tmp_name"]) ?: 'application/octet-stream');
+                if(!$insertfile){
                     $error=4;
                     echo "<script>swal('Error!', 'Failed to save the uploaded image. Please try again.', 'error').then(function() {
                       window.location = 'team';
@@ -148,7 +149,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                  
                     <label  class="col-sm-2 col-form-label" >Image</label>
                     <div class="col-sm-2">
-                      <img src="<?=$baseurl.$teams->image;?>" width="150px">
+                      <img src="<?=image_url($teams->image);?>" width="150px">
                       <input type="hidden" class="form-control" name="oldimage" value="<?=$teams->image;?>">
                     </div>
                     <div class="col-sm-8">

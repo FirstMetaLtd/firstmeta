@@ -85,4 +85,65 @@ function get_settings($con){
     }
     return $set;
 }
+
+/**
+ * Builds a displayable URL for a stored image/file path. Supabase Storage
+ * uploads are already full URLs; legacy local paths still get $baseurl
+ * prepended for backwards compatibility with existing DB rows.
+ */
+function image_url($path){
+    if(empty($path)){
+        return '';
+    }
+    if(preg_match('#^https?://#i', $path)){
+        return $path;
+    }
+    global $baseurl;
+    return $baseurl.$path;
+}
+
+/**
+ * Uploads a file to Supabase Storage (required on Vercel, where the
+ * serverless PHP filesystem is read-only and can't persist local uploads).
+ * Returns the public URL on success, or false on failure.
+ */
+function upload_to_supabase_storage($tmpFilePath, $destPath, $mimeType){
+    $supabaseUrl = getenv('SUPABASE_URL') ?: ($_ENV['SUPABASE_URL'] ?? '');
+    $serviceKey = getenv('SUPABASE_SERVICE_KEY') ?: ($_ENV['SUPABASE_SERVICE_KEY'] ?? '');
+    $bucket = 'uploads';
+
+    if(!$supabaseUrl || !$serviceKey){
+        error_log('upload_to_supabase_storage: missing SUPABASE_URL or SUPABASE_SERVICE_KEY');
+        return false;
+    }
+
+    $fileData = file_get_contents($tmpFilePath);
+    if($fileData === false){
+        return false;
+    }
+
+    $url = rtrim($supabaseUrl, '/')."/storage/v1/object/{$bucket}/{$destPath}";
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fileData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer '.$serviceKey,
+        'Content-Type: '.$mimeType,
+        'x-upsert: true',
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if($httpCode >= 200 && $httpCode < 300){
+        return rtrim($supabaseUrl, '/')."/storage/v1/object/public/{$bucket}/{$destPath}";
+    }
+
+    error_log("upload_to_supabase_storage failed: HTTP $httpCode, curl_error=$curlError, response=$response");
+    return false;
+}
 ?>

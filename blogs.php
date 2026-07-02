@@ -87,7 +87,7 @@ $sql = 'SELECT * from posts  where post_for=:post_for AND status=:status ORDER B
                             <div class="blog-style-card">
                                 <div class="blog-style-img">
                                     <a href="<?=$baseurl.'blog/'.$p->slug;?>">
-                                        <img src="<?=$baseurl.$p->image;?>" alt="Images">
+                                        <img src="<?=image_url($p->image);?>" alt="Images">
                                     </a>
                                     <div class="blog-style-tag">
                                         <h3><?=$day;?></h3>

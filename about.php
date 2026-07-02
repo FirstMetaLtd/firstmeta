@@ -184,7 +184,7 @@ We offer new services that go beyond today's traditional data center offerings.
                 ?>
                 <div class="col-lg-2 col-6">
                     <div class="technology-card technology-card-color">
-                        <img src="<?=$baseurl.$images[$i];?>" height="50px">
+                        <img src="<?=image_url($images[$i]);?>" height="50px">
                     </div>
                 </div>
                 <?php } endforeach; ?>

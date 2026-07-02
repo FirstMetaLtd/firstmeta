@@ -56,8 +56,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
 
 
             $tempname = $_FILES['image']['tmp_name'];
-            $insertfile = "img/ads/".date('Ymd')."asianviews".date('His').".".$ext ;
-            if(move_uploaded_file($tempname,"../".$insertfile)){
+            $destpath = "ads/".date('Ymd')."asianviews".date('His').".".$ext ;
+            $insertfile = upload_to_supabase_storage($tempname, $destpath, mime_content_type($tempname) ?: 'application/octet-stream');
+            if($insertfile){
 
 
             $arr['link']=$link;
@@ -155,7 +156,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                      ?>
                   <tr>
                     <td><?=$sno;?></td>
-                    <td><a href="<?=$p->link;?>" target="_blank"><img src="<?=$baseurl.$p->image;?>" width="100px"></a></td>
+                    <td><a href="<?=$p->link;?>" target="_blank"><img src="<?=image_url($p->image);?>" width="100px"></a></td>
                     <td>
                       
                       <a href="delete?id=<?=$p->id;?>&type=Ad" class="badge badge-danger" onclick="return confirm('Do you want to delete?');">Delete</a>

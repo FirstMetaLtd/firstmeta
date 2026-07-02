@@ -45,7 +45,7 @@ if(count($packages)>0){
               <div class="col-12">
                 <?php if($p->image!='NA'){ ?>
                 
-                <img src="<?=$baseurl.$p->image;?>" class="product-image" alt="Package Image">
+                <img src="<?=image_url($p->image);?>" class="product-image" alt="Package Image">
                <?php }else{ ?>
                 <iframe width="490" height="280" src="<?=$p->video_url;?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 

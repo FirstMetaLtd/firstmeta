@@ -14,7 +14,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     
     <a href="home" class="brand-link text-center">
-     <img src="<?=$baseurl.$set->logo;?>" style="width:50px;" alt=""
+     <img src="<?=image_url($set->logo);?>" style="width:50px;" alt=""
                                                 class="logo"> 
     
     </a>

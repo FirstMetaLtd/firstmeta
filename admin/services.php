@@ -52,8 +52,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
   if (in_array($ext, $allowed)) {
       $file_type = 'is_image';
       $filedate= date('Ymd')."service".date('His');
-            $insertfile = "img/".$filedate.".".$ext ;
-            if(!move_uploaded_file($_FILES["image"]["tmp_name"], '../'.$insertfile)){
+            $destpath = "service/".$filedate.".".$ext ;
+            $insertfile = upload_to_supabase_storage($_FILES["image"]["tmp_name"], $destpath, mime_content_type($_FILES["image"]["tmp_name"]) ?: 'application/octet-stream');
+            if(!$insertfile){
                 $error=4;
                 echo "<script>swal('Error!', 'Failed to save the uploaded image. Please try again.', 'error').then(function() {
                   window.location = 'services';
@@ -174,7 +175,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                     <?php foreach($services as $p):?>
                   <tr>
                     <td><?=$sno;?></td>
-                    <td><img src="<?=$baseurl.$p->image;?>" width="140px"></td>
+                    <td><img src="<?=image_url($p->image);?>" width="140px"></td>
                     <td><?=$p->title;?></td>
                     <td><?=substr($p->short_desc,0,100).'....';?></td>
                     

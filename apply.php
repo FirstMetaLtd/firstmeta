@@ -43,8 +43,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
 
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
     $filedate= date('Ymd')."resume".date('His');
-    $insertfile = "resumes/".$filedate.".".$ext ;
-    if(!move_uploaded_file($_FILES["resume"]["tmp_name"], $insertfile)){
+    $destpath = "resumes/".$filedate.".".$ext ;
+    $insertfile = upload_to_supabase_storage($_FILES["resume"]["tmp_name"], $destpath, mime_content_type($_FILES["resume"]["tmp_name"]) ?: 'application/octet-stream');
+    if(!$insertfile){
         $error=4;
         echo "<script>swal('Error!', 'Failed to save the uploaded resume. Please try again.', 'error').then(function() {
       window.history.back();

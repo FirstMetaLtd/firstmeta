@@ -53,8 +53,9 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
 if (in_array($ext, $allowed)) {
     $file_type = 'is_image';
     $filedate= date('Ymd')."post".date('His');
-          $insertfile = "img/posts/".$filedate.".".$ext ;
-          if(!move_uploaded_file($_FILES["image"]["tmp_name"], '../'.$insertfile)){
+          $destpath = "posts/".$filedate.".".$ext ;
+          $insertfile = upload_to_supabase_storage($_FILES["image"]["tmp_name"], $destpath, mime_content_type($_FILES["image"]["tmp_name"]) ?: 'application/octet-stream');
+          if(!$insertfile){
               $error=4;
               echo "<script>swal('Error!', 'Failed to save the uploaded image. Please try again.', 'error').then(function() {
                 window.location = 'add-post';

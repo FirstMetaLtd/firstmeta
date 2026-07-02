@@ -56,8 +56,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
 
 
             $tempname = $_FILES['image']['tmp_name'];
-            $insertfile = "img/".date('Ymd')."teammember".date('His').".".$ext ;
-            if(move_uploaded_file($tempname,"../".$insertfile)){
+            $destpath = "team/".date('Ymd')."teammember".date('His').".".$ext ;
+            $insertfile = upload_to_supabase_storage($tempname, $destpath, mime_content_type($tempname) ?: 'application/octet-stream');
+            if($insertfile){
 
 
             $arr['designation']=$designation;
@@ -181,7 +182,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                     <td><?=$sno;?></td>
                     <td><?=$p->name;?></td>
                     <td><?=$p->designation;?></td>
-                    <td><a href="<?=$baseurl.$p->image;?>" target="_blank"><img src="<?=$baseurl.$p->image;?>" width="100px"></a></td>
+                    <td><a href="<?=image_url($p->image);?>" target="_blank"><img src="<?=image_url($p->image);?>" width="100px"></a></td>
                     <td>
                     <a href="edit-team?id=<?=$p->id;?>" class="badge badge-warning">Edit</a>
                       <a href="delete?id=<?=$p->id;?>&type=Team" class="badge badge-danger" onclick="return confirm('Do you want to delete?');">Delete</a>

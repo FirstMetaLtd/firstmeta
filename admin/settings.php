@@ -50,8 +50,9 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
 if (in_array($ext, $allowed)) {
     $file_type = 'is_image';
     $filedate= date('Ymd')."logo".date('His');
-          $insertfile = "img/".$filedate.".".$ext ;
-          if(!move_uploaded_file($_FILES["logo"]["tmp_name"], '../'.$insertfile)){
+          $destpath = "logo/".$filedate.".".$ext ;
+          $insertfile = upload_to_supabase_storage($_FILES["logo"]["tmp_name"], $destpath, mime_content_type($_FILES["logo"]["tmp_name"]) ?: 'application/octet-stream');
+          if(!$insertfile){
               $error=4;
               echo "<script>swal('Error!', 'Failed to save the uploaded logo. Please try again.', 'error').then(function() {
                 window.location = 'settings';
@@ -113,7 +114,7 @@ if (in_array($ext, $allowed)) {
                     <div class="col-sm-10">
                         <div class="row">
                            <div class="col-sm-2">
-                             <img src="<?=$baseurl.$set->logo;?>" width="150px">
+                             <img src="<?=image_url($set->logo);?>" width="150px">
                              <input type="hidden" value="<?=$set->logo;?>" name="oldlogo">
                            </div>
                            <div class="col-sm-10">
