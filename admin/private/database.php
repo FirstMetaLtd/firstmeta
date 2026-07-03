@@ -42,6 +42,10 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
         PDO::ATTR_EMULATE_PREPARES   => false,
     ]);
+    // Explicitly set search_path on every connection — some pooled connections
+    // (Supavisor transaction mode) don't reliably inherit the role's configured
+    // default, which breaks every unqualified table reference in this codebase.
+    $con->exec("SET search_path TO public");
 } catch (PDOException $e) {
     // In production, never show DB errors to the user
     $isDebug = filter_var($_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG') ?? false, FILTER_VALIDATE_BOOLEAN);
