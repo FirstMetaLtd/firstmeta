@@ -26,7 +26,7 @@ $sql = 'SELECT * from team ORDER BY id desc;';
              <?php foreach($teams as $p):?>
             <div class="col-lg-4 col-md-6">
                 <div class="team-card">
-                    <img src="<?=$baseurl.$p->image;?>" alt="Team Images" style="width:100%;height:400px">
+                    <img src="<?=image_url($p->image);?>" alt="Team Images" style="width:100%;height:400px">
 
                     <div class="content">
                         <h3><?=$p->name;?></h3>

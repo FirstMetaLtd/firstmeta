@@ -1,8 +1,6 @@
 <?php
-session_start();
-if(isset($_SESSION['admin_url'])){
-	unset($_SESSION['admin_url']);
-}
+require 'private/autoload.php';
+session_destroy();
 header('location:login');
 die;
 ?>

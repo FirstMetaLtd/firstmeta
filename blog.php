@@ -24,7 +24,7 @@ if(count($posts)>0){
 	$stmview->execute(['ip_add'=>$ip_add,'post_id'=>$p->post_id]);
 	$views=$stmview->fetchAll(PDO::FETCH_OBJ);
 	if(count($views)<1){
-		$addviews = "INSERT INTO `views`(`ip_add`, `post_id`) VALUES (:ip_add,:post_id)";
+		$addviews = "INSERT INTO views(ip_add, post_id) VALUES (:ip_add,:post_id)";
         $stm = $con->prepare($addviews);
         $stm->execute(['ip_add'=>$ip_add,'post_id'=>$p->post_id]);
 
@@ -107,7 +107,7 @@ if(count($posts)>0){
 
         <div class="mobile-nav">
             <a href="<?=$baseurl;?>" class="logo">
-                <img src="<?=$baseurl.$set->logo;?>" width="50px" alt="Hrdtech">
+                <img src="<?=image_url($set->logo);?>" width="50px" alt="Hrdtech">
             </a>
         </div>
 
@@ -161,7 +161,7 @@ if(count($posts)>0){
                 <div class="container">
                     <nav class="navbar navbar-expand-md navbar-light ">
                         <a class="navbar-brand" href="<?=$baseurl;?>">
-                            <img src="<?=$baseurl.$set->logo;?>"  width="80px" alt="FirstMeta">
+                            <img src="<?=image_url($set->logo);?>"  width="80px" alt="FirstMeta">
                             <!--<h4 style="font-family:Monospace">Hrdtech</h4>-->
                         </a>
                         <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
@@ -293,7 +293,7 @@ if(count($posts)>0){
                             <div class="blog-style-card">
                                 <div class="blog-style-img">
 
-                                    <img src="<?=$baseurl.$p->image;?>" alt="Images">
+                                    <img src="<?=image_url($p->image);?>" alt="Images">
 
                                     <div class="blog-style-tag">
                                         <h3><?=$day;?></h3>

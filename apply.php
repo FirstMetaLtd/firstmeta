@@ -30,12 +30,27 @@ $error='';
 if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSION['token'] == $_POST['token'] && isset($_POST['form_data'])){
   
   $filename = $_FILES['resume']['name'];
-  if($filename!=''){
-  
+  $upload_error = $_FILES['resume']['error'];
+  if($upload_error !== UPLOAD_ERR_OK && $upload_error !== UPLOAD_ERR_NO_FILE){
+    $error=3;
+    $msg = in_array($upload_error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
+        ? 'Resume file is too large. Please upload a smaller file.'
+        : 'Resume upload failed. Please try again.';
+    echo "<script>swal('Error!', '$msg', 'error').then(function() {
+      window.history.back();
+  })</script>";
+  }elseif($filename!=''){
+
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
     $filedate= date('Ymd')."resume".date('His');
-    $insertfile = "resumes/".$filedate.".".$ext ;
-    move_uploaded_file($_FILES["resume"]["tmp_name"], $insertfile);
+    $destpath = "resumes/".$filedate.".".$ext ;
+    $insertfile = upload_to_supabase_storage($_FILES["resume"]["tmp_name"], $destpath, mime_content_type($_FILES["resume"]["tmp_name"]) ?: 'application/octet-stream');
+    if(!$insertfile){
+        $error=4;
+        echo "<script>swal('Error!', 'Failed to save the uploaded resume. Please try again.', 'error').then(function() {
+      window.history.back();
+  })</script>";
+    }
 
   }else{
     $insertfile='NA';
@@ -55,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
             $arr['phone']=$phone;
             $arr['message']=$message;
 
-                  $addcity = "INSERT INTO `applications` (`title`, `name`, `email`, `phone`, `message`, `resume`, `date`) 
+                  $addcity = "INSERT INTO applications (title, name, email, phone, message, resume, date) 
                                 VALUES (:title,:name,:email,:phone,:message,:resume,:date)";
                   $stm = $con->prepare($addcity);
                   if($stm->execute($arr)){

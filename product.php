@@ -43,7 +43,7 @@ if(count($posts)>0){
                         <div class="col-lg-4">
                             <div class="blog-style-card">
                                 <div class="blog-style-img">
-                                        <img src="<?=$baseurl.$p->image;?>">
+                                        <img src="<?=image_url($p->image);?>">
                                 </div>
                                 
                             </div>

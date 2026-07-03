@@ -27,7 +27,7 @@ $getjobs = $stmjobs->fetchAll(PDO::FETCH_OBJ);
             <?php foreach($getjobs as $p):?>
                 <div class="col-lg-4 col-sm-12">
                     <div class="services-card services-style-bg">
-                    <img src="<?=$baseurl.$p->icon;?>" width="50px" height="50px">
+                    <img src="<?=image_url($p->icon);?>" width="50px" height="50px">
                         <h3><a href="apply/<?=$p->slug;?>"><?=$p->title;?></a></h3>
                         <a href="apply/<?=$p->slug;?>" class="btn btn-light">Apply now</a>
                     </div>

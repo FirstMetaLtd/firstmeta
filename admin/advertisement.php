@@ -37,29 +37,44 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
     $filename = $_FILES["image"]["name"];
     $file_size = $_FILES["image"]["size"];
 
+    if($_FILES["image"]["error"] !== UPLOAD_ERR_OK){
+        $msg = in_array($_FILES["image"]["error"], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
+            ? 'Image is too large. Please upload a smaller file.'
+            : 'Image upload failed. Please try again.';
+        echo "<script>swal('Error!', '$msg', 'error').then(function() {
+                            window.history.back();
+                        })</script>";
+    }else{
+
     $filesize=$file_size/1024;
     if($filesize<500){
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-    
-   
+
+
         if($error == ''){
 
 
             $tempname = $_FILES['image']['tmp_name'];
-            $insertfile = "img/ads/".date('Ymd')."asianviews".date('His').".".$ext ;
-            move_uploaded_file($tempname,"../".$insertfile);
+            $destpath = "ads/".date('Ymd')."asianviews".date('His').".".$ext ;
+            $insertfile = upload_to_supabase_storage($tempname, $destpath, mime_content_type($tempname) ?: 'application/octet-stream');
+            if($insertfile){
 
-        
+
             $arr['link']=$link;
             $arr['image']=$insertfile;
-           
+
                   $addcity = "insert into advertisment (link,image) values(:link,:image)";
                   $stm = $con->prepare($addcity);
                   if($stm->execute($arr)){
                       echo "<script>
                                   window.location = 'advertisement';</script>";
                   }
+            }else{
+                echo "<script>swal('Error!', 'Failed to save the uploaded image. Please try again.', 'error').then(function() {
+                            window.history.back();
+                        })</script>";
+            }
         }
 
       }else{
@@ -67,6 +82,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                             window.history.back();
                         })</script>";
       }
+    }
 
 
 }
@@ -140,7 +156,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                      ?>
                   <tr>
                     <td><?=$sno;?></td>
-                    <td><a href="<?=$p->link;?>" target="_blank"><img src="<?=$baseurl.$p->image;?>" width="100px"></a></td>
+                    <td><a href="<?=$p->link;?>" target="_blank"><img src="<?=image_url($p->image);?>" width="100px"></a></td>
                     <td>
                       
                       <a href="delete?id=<?=$p->id;?>&type=Ad" class="badge badge-danger" onclick="return confirm('Do you want to delete?');">Delete</a>

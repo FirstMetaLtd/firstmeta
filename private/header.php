@@ -63,7 +63,7 @@ $getproducts = $statesment->fetchAll(PDO::FETCH_OBJ);
 
         <div class="mobile-nav">
             <a href="<?=$baseurl;?>" class="logo">
-                <img src="<?=$baseurl.$set->logo;?>" width="50px"  alt="First Meta"> 
+                <img src="<?=image_url($set->logo);?>" width="50px"  alt="First Meta"> 
             </a>
         </div>
 
@@ -119,7 +119,7 @@ $getproducts = $statesment->fetchAll(PDO::FETCH_OBJ);
                 <div class="container">
                     <nav class="navbar navbar-expand-md navbar-light ">
                         <a class="navbar-brand" href="<?=$baseurl;?>" >
-                             <img src="<?=$baseurl.$set->logo;?>" width="80px"  alt="First Meta"> 
+                             <img src="<?=image_url($set->logo);?>" width="80px"  alt="First Meta"> 
                             <!--<h4 style="font-family:Monospace">Hrdtech</h4>-->
                         </a>
                         <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">

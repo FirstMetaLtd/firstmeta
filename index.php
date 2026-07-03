@@ -110,7 +110,7 @@ Whether you want to create a product from scratch or add new functionality to an
                 ?>
                 <div class="col-lg-2 col-6">
                     <div class="technology-card technology-card-color">
-                        <img src="<?=$baseurl.$images[$i];?>" height="50px">
+                        <img src="<?=image_url($images[$i]);?>" height="50px">
                     </div>
                 </div>
                 <?php } endforeach; ?>

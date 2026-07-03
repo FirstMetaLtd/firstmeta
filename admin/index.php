@@ -4,28 +4,28 @@ require 'private/autoload.php';
 require 'private/header.php';
 require 'private/sidebar.php';
 
-$servicesq='SELECT * FROM `services`';
+$servicesq='SELECT * FROM services';
 $stmser = $con->prepare($servicesq);
-$stmser->execute(['status'=>'Active']);
+$stmser->execute();
 $services = $stmser->fetchAll(PDO::FETCH_OBJ);
 
 
-$active_news='SELECT * FROM `posts` where status=:status';
+$active_news='SELECT * FROM posts where status=:status';
 $stm = $con->prepare($active_news);
 $stm->execute(['status'=>'Active']);
 $activenews = $stm->fetchAll(PDO::FETCH_OBJ);
 
-$inactive_news='SELECT * FROM `posts` where status=:status';
+$inactive_news='SELECT * FROM posts where status=:status';
 $stmin = $con->prepare($inactive_news);
 $stmin->execute(['status'=>'Inactive']);
 $inactivenews = $stmin->fetchAll(PDO::FETCH_OBJ);
 
-$teamsq='SELECT * FROM `team`';
+$teamsq='SELECT * FROM team';
 $stmteam = $con->prepare($teamsq);
 $stmteam->execute();
 $team = $stmteam->fetchAll(PDO::FETCH_OBJ);
 
-$jobsq='SELECT * FROM `jobs`';
+$jobsq='SELECT * FROM jobs';
 $stmjb = $con->prepare($jobsq);
 $stmjb->execute();
 $applications = $stmin->fetchAll(PDO::FETCH_OBJ);

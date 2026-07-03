@@ -3,7 +3,7 @@ $sql = 'SELECT * from posts  where post_for=:post_for AND status=:status ORDER B
 	$statement = $con->prepare($sql);
 	$statement->execute(['status'=>'Active','post_for'=>'Normal']);
 	$posts = $statement->fetchAll(PDO::FETCH_OBJ);
-
+?>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4509296207410158"
      crossorigin="anonymous"></script>
 <!-- FirstMeta -->
@@ -16,7 +16,7 @@ $sql = 'SELECT * from posts  where post_for=:post_for AND status=:status ORDER B
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-
+<?php
     if(count($posts)<1){
         echo "<script>window.history.back();</script>";
     }
@@ -87,7 +87,7 @@ $sql = 'SELECT * from posts  where post_for=:post_for AND status=:status ORDER B
                             <div class="blog-style-card">
                                 <div class="blog-style-img">
                                     <a href="<?=$baseurl.'blog/'.$p->slug;?>">
-                                        <img src="<?=$baseurl.$p->image;?>" alt="Images">
+                                        <img src="<?=image_url($p->image);?>" alt="Images">
                                     </a>
                                     <div class="blog-style-tag">
                                         <h3><?=$day;?></h3>

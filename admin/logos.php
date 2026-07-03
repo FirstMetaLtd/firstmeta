@@ -52,10 +52,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
               //Make sure we have a filepath
               if ($tmpFilePath != ""){
                 //Setup our new file path
-                $filepath = "img/".date('Ymd').$i.date('His').".".$ex;
-                //Upload the file into the temp dir
-                if(move_uploaded_file($tmpFilePath, "../".$filepath)) {
-                  $more_images.=$filepath.",";
+                $filepath = "technology/".date('Ymd').$i.date('His').".".$ex;
+                //Upload the file to Supabase Storage
+                $publicUrl = upload_to_supabase_storage($tmpFilePath, $filepath, mime_content_type($tmpFilePath) ?: 'application/octet-stream');
+                if($publicUrl) {
+                  $more_images.=$publicUrl.",";
                 }
               }
             }
@@ -138,7 +139,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
                             $images = explode(',',$p->image);
                             for($i=0;$i<count($images)-1;$i++){
                         ?>
-                        <img src="<?=$baseurl.$images[$i];?>" width="100px">
+                        <img src="<?=image_url($images[$i]);?>" width="100px">
                         <?php } ?>
                     </td>
                     <td>

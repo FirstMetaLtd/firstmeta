@@ -41,8 +41,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
 extract($_POST);
 
 $filename = $_FILES['icon']['name'];
+$upload_error = $_FILES['icon']['error'];
 
-if($filename!=''){
+if($upload_error !== UPLOAD_ERR_OK && $upload_error !== UPLOAD_ERR_NO_FILE){
+  $error=3;
+  $msg = in_array($upload_error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
+      ? 'Icon is too large. Please upload a smaller file.'
+      : 'Icon upload failed. Please try again.';
+  echo "<script>swal('Error!', '$msg', 'error').then(function() {
+    window.location = 'add-job';
+})</script>";
+}elseif($filename!=''){
 $file_size = $_FILES["icon"]["size"];
 $filesize=$file_size/1024;
 $allowed = array('gif', 'png', 'jpg','webp','jpeg');
@@ -51,8 +60,14 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
 if (in_array($ext, $allowed)) {
     $file_type = 'is_image';
     $filedate= date('Ymd')."icon".date('His');
-          $insertfile = "img/".$filedate.".".$ext ;
-          move_uploaded_file($_FILES["icon"]["tmp_name"], '../'.$insertfile);
+          $destpath = "job/".$filedate.".".$ext ;
+          $insertfile = upload_to_supabase_storage($_FILES["icon"]["tmp_name"], $destpath, mime_content_type($_FILES["icon"]["tmp_name"]) ?: 'application/octet-stream');
+          if(!$insertfile){
+              $error=4;
+              echo "<script>swal('Error!', 'Failed to save the uploaded icon. Please try again.', 'error').then(function() {
+                window.location = 'add-job';
+            })</script>";
+          }
 }else{
   $error=3;
   echo "<script>swal('Error!', 'Failed to post.File must be an image', 'error').then(function() {
@@ -92,7 +107,7 @@ if (in_array($ext, $allowed)) {
 
            
             
-            $addposts = "UPDATE `jobs` SET `title`=:title,`description`=:description,`icon`=:icon,`slug`=:slug,`benefits`=:benefits WHERE id=:id";
+            $addposts = "UPDATE jobs SET title=:title,description=:description,icon=:icon,slug=:slug,benefits=:benefits WHERE id=:id";
             $stm = $con->prepare($addposts);
             if($stm->execute($arr)){
                       echo "<script>swal('Success!', 'Job Updated successfully.', 'success').then(function() {
@@ -132,7 +147,7 @@ if (in_array($ext, $allowed)) {
                  
                     <label  class="col-sm-2 col-form-label" >Icon</label>
                     <div class="col-sm-10">
-                      <img src="<?=$baseurl.$p->icon;?>" width="200px">
+                      <img src="<?=image_url($p->icon);?>" width="200px">
                       <input type="file" class="form-control" name="icon">
                     </div>
                   </div>

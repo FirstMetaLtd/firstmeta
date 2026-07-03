@@ -81,7 +81,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
             $arr['role']=$role;
             
 
-            $addadmin = "UPDATE `admin` SET `username`=:username,`email`=:email,`type`=:type,`role`=:role WHERE `id`=:id";
+            $addadmin = "UPDATE admin SET username=:username,email=:email,type=:type,role=:role WHERE id=:id";
             $stm = $con->prepare($addadmin);
             if($stm->execute($arr)){
                     echo "<script>swal('Success!', 'Admin updated successfully.', 'success').then(function() {

@@ -69,7 +69,7 @@ if(isset($_POST['token']) && isset($_POST['contact'])){
             $arr['phone']=$_POST['phone'];
             $arr['message']=addslashes($_POST['message']);
             
-            $query="INSERT INTO `contact` (`name`, `email`, `phone`, `subject`, `message`) VALUES (:name,:email,:phone,:subject,:message)";
+            $query="INSERT INTO contact (name, email, phone, subject, message) VALUES (:name,:email,:phone,:subject,:message)";
             $stm = $con->prepare($query);
             if($stm->execute($arr)){
     

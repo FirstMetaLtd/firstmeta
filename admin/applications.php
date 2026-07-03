@@ -63,7 +63,7 @@ require 'private/sidebar.php';
                     <td><?=$p->phone;?></td>
                     <td><?=$p->message;?></td>
                     <td><?=$p->title;?></td>
-                    <td><a href="<?=$baseurl.$p->resume;?>" target="_blank">View</a></td>
+                    <td><a href="<?=image_url($p->resume);?>" target="_blank">View</a></td>
                     <td><?=$p->date;?></td>
                     
                   </tr>

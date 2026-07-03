@@ -35,7 +35,16 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['token']) && $_SESSIO
   extract($_POST);
 
 $filename = $_FILES['image']['name'];
-if($filename!=''){
+$upload_error = $_FILES['image']['error'];
+if($upload_error !== UPLOAD_ERR_OK && $upload_error !== UPLOAD_ERR_NO_FILE){
+  $error=3;
+  $msg = in_array($upload_error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
+      ? 'Image is too large. Please upload a smaller file.'
+      : 'Image upload failed. Please try again.';
+  echo "<script>swal('Error!', '$msg', 'error').then(function() {
+    window.location = 'add-post';
+})</script>";
+}elseif($filename!=''){
 $file_size = $_FILES["image"]["size"];
 $filesize=$file_size/1024;
 $allowed = array('gif', 'png', 'jpg','webp','jpeg');
@@ -44,8 +53,14 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
 if (in_array($ext, $allowed)) {
     $file_type = 'is_image';
     $filedate= date('Ymd')."post".date('His');
-          $insertfile = "img/posts/".$filedate.".".$ext ;
-          move_uploaded_file($_FILES["image"]["tmp_name"], '../'.$insertfile);
+          $destpath = "posts/".$filedate.".".$ext ;
+          $insertfile = upload_to_supabase_storage($_FILES["image"]["tmp_name"], $destpath, mime_content_type($_FILES["image"]["tmp_name"]) ?: 'application/octet-stream');
+          if(!$insertfile){
+              $error=4;
+              echo "<script>swal('Error!', 'Failed to save the uploaded image. Please try again.', 'error').then(function() {
+                window.location = 'add-post';
+            })</script>";
+          }
 }else{
   $error=3;
   echo "<script>swal('Error!', 'Failed to post.File must be an image', 'error').then(function() {
@@ -113,7 +128,7 @@ if (in_array($ext, $allowed)) {
             // echo strlen($short_desc).'<br>';
             
             
-            $addposts = "INSERT INTO `posts`(`post_for`,`short_desc`,`video_url`,`post_id`, `title`, `description`, `image`, `tags`, `meta_keywords`, `meta_description`, `date`, `status`,`slug`) 
+            $addposts = "INSERT INTO posts(post_for,short_desc,video_url,post_id, title, description, image, tags, meta_keywords, meta_description, date, status,slug) 
             VALUES (:post_for,:short_desc,:video_url,:post_id,:title,:description,:image,:tags,:meta_keywords,:meta_description,:date,:status,:slug)";
             $stm = $con->prepare($addposts);
             if($stm->execute($arr)){
